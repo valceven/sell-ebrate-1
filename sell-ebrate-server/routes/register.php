@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
   if ($sql_check->get_result()->num_rows != 0) {
-    $response = new ServerResponse(data: [], error: ["message" => "Email already exists"]);
+    $response = new ServerResponse(error: ["message" => "Email already exists"]);
 
     returnJsonHttpResponse(409, $response);
   }
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $payload = array($user_id);
   $hashed_payload = hash_hmac('sha256', json_encode($payload), $secret_key);
-  $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => json_encode($hashed_payload)], error: []);
+  $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => json_encode($hashed_payload)]);
 
   returnJsonHttpResponse(200, $response);
 }
