@@ -3,8 +3,12 @@ include_once "../utils/headers.php";
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $email = $_REQUEST["email"];
-  $password = $_REQUEST["password"];
+  $rawData = file_get_contents('php://input');
+  $jsonData = json_decode($rawData, true);
+
+  $email = $jsonData["email"];
+  $password = $jsonData["password"];
+
 
   if (empty($email) || empty($password)) {
     $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]);

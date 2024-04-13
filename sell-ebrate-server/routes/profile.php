@@ -2,8 +2,10 @@
 include_once "../utils/headers.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  $user_id = $_REQUEST["user_id"];
+  $rawData = file_get_contents('php://input');
+  $jsonData = json_decode($rawData, true);
 
+  $user_id = $jsonData["user_id"];
 
   if (empty($user_id)) {
     $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]);

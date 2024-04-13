@@ -8,7 +8,7 @@ export const registerFormSchema = z.object({
   password: z.string(),
 
   gender: z.nativeEnum(Gender),
-  birthdate: z.string().datetime(),
+  birthdate: z.date(),
 
   address: z.object({
     street: z.string(),

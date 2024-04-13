@@ -46,9 +46,9 @@ export default function Login() {
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     console.log(values);
 
-    const res = await axios.post(
-      serverDomain + "login.php?" + urlParamsSerializer(values),
-    );
+    const res = await axios.post(serverDomain + "login.php", {
+      ...values,
+    });
 
     console.log(res);
   }

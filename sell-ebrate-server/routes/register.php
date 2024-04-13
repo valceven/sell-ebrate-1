@@ -2,16 +2,20 @@
 include_once "../utils/headers.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $firstname = $_POST["firstname"];
-  $lastname = $_POST["lastname"];
 
-  $email = $_POST["email"];
-  $password = $_POST["password"];
+  $rawData = file_get_contents('php://input');
+  $jsonData = json_decode($rawData, true);
 
-  $gender = $_POST["gender"];
-  $birthdate = $_POST["birthdate"];
+  $firstname = $jsonData["firstname"];
+  $lastname = $jsonData["lastname"];
 
-  $address = $_POST["address"];
+  $email = $jsonData["email"];
+  $password = $jsonData["password"];
+
+  $gender = $jsonData["gender"];
+  $birthdate = $jsonData["birthdate"];
+
+  $address = $jsonData["address"];
 
   $street = $address["street"];
   $barangay = $address["barangay"];
@@ -20,21 +24,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $country = $address["country"];
   $zipcode = $address["zipcode"];
 
-  $requiredFields = ["firstname", "lastname", "email", "password", "gender", "birthdate", "address"];
 
-  foreach ($requiredFields as $field) {
-    if (empty($_POST[$field])) {
-      $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]);
-      returnJsonHttpResponse(400, $response);
-    }
-  }
+  // FIX: i hate validation
+  /* $requiredFields = ["firstname", "lastname", "email", "password", "gender", "birthdate", "address"]; */
+
+  /* foreach ($requiredFields as $field) { */
+  /*   if (empty($jsonData[$field])) { */
+  /*     $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]); */
+  /*     returnJsonHttpResponse(400, $response); */
+  /*   } */
+  /* } */
 
 
   $sql_check = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
   $sql_check->bind_param("s", $email);
   $sql_check->execute();
 
-  if ($sql1->get_result()->num_rows != 0) {
+
+  if ($sql_check->get_result()->num_rows != 0) {
     $response = new ServerResponse(data: [], error: ["message" => "Email already exists"]);
 
     returnJsonHttpResponse(409, $response);
@@ -44,10 +51,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $options = ['cost' => 12];
   $hashed_password = password_hash($password, PASSWORD_DEFAULT, $options);
 
-  $sql1 = $conn->prepare("INSERT INTO tblAccount (firstname, lastname, email, password, gender, birhdate) VALUES (?, ?, ?, ?, ?, ?)");
+  $sql1 = $conn->prepare("INSERT INTO tblAccount (firstname, lastname, email, password, gender, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
   $sql1->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, $birthdate);
   $sql1->execute();
-  $user_id = $sql2->insert_id;
+  $user_id = $sql1->insert_id;
 
 
   $sql2 = $conn->prepare("INSERT INTO tblUser (user_id, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
