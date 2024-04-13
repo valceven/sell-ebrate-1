@@ -1,5 +1,5 @@
 <?php
-include_once "utils/headers.php";
+include_once "../utils/headers.php";
 
 $user_id = $_POST["user_id"];
 

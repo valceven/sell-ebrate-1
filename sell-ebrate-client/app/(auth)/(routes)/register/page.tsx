@@ -23,10 +23,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useModalStore } from "@/store/modals";
 import { Gender } from "@/util/types";
 import { registerFormSchema } from "@/util/form-schema";
 import { cn } from "@/lib/utils";

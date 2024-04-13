@@ -1,5 +1,6 @@
 <?php
 
+
 class ServerResponse
 
 {
@@ -8,6 +9,7 @@ class ServerResponse
 
   public function __construct($data = null, $error = null)
   {
+    echo $data;
     $this->data = $data;
     $this->error = $error;
   }
