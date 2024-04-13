@@ -4,19 +4,17 @@ CREATE TABLE tblAccount (
 
   firstname TEXT NOT NULL,
   lastname TEXT NOT NULL,
-
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
-
   gender ENUM('male', 'female') DEFAULT 'male',
   birthdate DATETIME,
 
   CONSTRAINT CHK_Gender CHECK (gender IN ('male', 'female'))
-};
+);
 
 CREATE TABLE tblUser (
   user_id BIGINT,
-  
+
   street TEXT,
   barangay TEXT,
   municipality TEXT,
@@ -27,7 +25,7 @@ CREATE TABLE tblUser (
 
 CREATE TABLE tblSeller (
   seller_id BIGINT,
-  
+
   seller_certification TEXT
 );
 
@@ -36,66 +34,67 @@ CREATE TABLE tblBuyer (
 );
 
 CREATE TABLE tblProduct (
-  product_id BIGINT AUTO_INCREMENT PRIMARY_KEY,
+  product_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
   seller_id BIGINT,
 
   product_name TEXT,
   description TEXT,
   quantity BIGINT,
-  price DOUBLE,
+  price DOUBLE
 );
-
 
 CREATE TABLE tblCart (
-  cart_id BIGINT AUTO_INCREMENT PRIMARY_KEY,
+  cart_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-  user_id BIGINT,
+  user_id BIGINT
 );
-
 
 CREATE TABLE tblCartItem (
   cart_id BIGINT,
-  product_id BIGINT,
+  product_id BIGINT
 );
 
 CREATE TABLE tblOrder (
-  order_id BIGINT AUTO_INCREMENT PRIMARY_KEY,
+  order_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+  buyer_id BIGINT
 );
 
 CREATE TABLE tblOrderItem (
   order_id BIGINT,
+
   product_id BIGINT,
 
-  quantity BIGINT,
+  quantity BIGINT
 );
 
 CREATE TABLE tblPayment (
-  payment_id BIGINT AUTO_INCREMENT PRIMARY_KEY,
+  payment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
   order_id BIGINT,
   buyer_id BIGINT,
 
   amount BIGINT,
-  date DATETIME DEFAULT NOW(),
+  date DATETIME DEFAULT NOW()
 );
 
 CREATE TABLE tblReview (
-  reply_id BIGINT AUTO_INCREMENT PRIMARY_KEY,
+  review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
   user_id BIGINT,
 
   rating INT(5),
-  message TEXT,
+  message TEXT
 );
-
 
 CREATE TABLE tblReply (
-  reply_id BIGINT,
+  reply_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-  message TEXT,
+  review_id BIGINT,
+
+  message TEXT
 );
-
 
 ALTER TABLE tblUser
 ADD CONSTRAINT FK_User_Account
@@ -145,4 +144,4 @@ FOREIGN KEY (user_id) REFERENCES tblUser(user_id);
 
 ALTER TABLE tblReply
 ADD CONSTRAINT FK_Reply_Review
-FOREIGN KEY (reply_id) REFERENCES tblReview(reply_id);
+FOREIGN KEY (review_id) REFERENCES tblReview(review_id);

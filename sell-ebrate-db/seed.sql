@@ -57,6 +57,6 @@ INSERT INTO tblReview (user_id, rating, message) VALUES
 (2, 4, 'Good service.');
 
 -- Insert dummy data into tblReply
-INSERT INTO tblReply (reply_id, message) VALUES
-(1, 'Thank you for your feedback.'),
-(2, 'We appreciate your review.');
+INSERT INTO tblReply (reply_id, review_id, message) VALUES
+(1, 1, 'Thank you for your feedback.'),
+(2, 2, 'We appreciate your review.');
