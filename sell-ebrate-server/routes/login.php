@@ -2,18 +2,13 @@
 include_once "../utils/headers.php";
 
 
-var_dump($_REQUEST);
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = $_REQUEST["email"];
   $password = $_REQUEST["password"];
 
   if (empty($email) || empty($password)) {
     $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]);
-
-    http_response_code(400);
-    echo json_encode($response);
-    exit();
+    returnJsonHttpResponse(400, $response);
   }
 
   $sql1 = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
@@ -24,10 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if ($result->num_rows == 0) {
     $response = new ServerResponse(data: [], error: ["message" => "Invalid credentials"]);
-
-    http_response_code(401);
-    echo json_encode($response);
-    exit();
+    returnJsonHttpResponse(401, $response);
   }
 
   $user = $result->fetch_assoc();
@@ -35,10 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!password_verify($user["password"], $password)) {
     // TODO: maybe its best this way para secure
     $response = new ServerResponse(data: [], error: ["message" => "Invalid credentials"]);
-
-    http_response_code(401);
-    echo json_encode($response);
-    exit();
+    returnJsonHttpResponse(401, $response);
   }
 
 
@@ -47,6 +36,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $hashed_payload = hash_hmac('sha256', json_encode($payload), $secret_key);
   $response = new ServerResponse(data: ["message" => "User logged in successfully", "token" => json_encode($hashed_payload)], error: []);
 
-  http_response_code(200);
-  echo json_encode($response);
+  returnJsonHttpResponse(200, $response);
 }

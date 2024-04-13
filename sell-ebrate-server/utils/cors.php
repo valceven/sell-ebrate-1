@@ -13,4 +13,4 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Credentials: true");
 
 // Set the Content-Type header for JSON responses
-header("Content-Type: application/json");
+header('Content-Type: application/json');

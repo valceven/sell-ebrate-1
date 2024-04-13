@@ -27,7 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import axios from "axios";
-import { serverDomain } from "@/util/server";
+import { serverDomain, urlParamsSerializer } from "@/util/server";
 
 const loginFormSchema = z.object({
   email: z.string().email(),
@@ -46,7 +46,9 @@ export default function Login() {
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     console.log(values);
 
-    const res = await axios.post(serverDomain + "login", { params: values });
+    const res = await axios.post(
+      serverDomain + "login.php?" + urlParamsSerializer(values),
+    );
 
     console.log(res);
   }
