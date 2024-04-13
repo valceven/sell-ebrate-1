@@ -52,6 +52,7 @@ export default function Login() {
 
     console.log(res);
   }
+
   return (
     <div>
       <Card className="w-full h-full">

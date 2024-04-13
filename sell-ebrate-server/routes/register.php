@@ -25,9 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   foreach ($requiredFields as $field) {
     if (empty($_POST[$field])) {
       $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]);
-      http_response_code(400);
-      echo json_encode($response);
-      exit();
+      returnJsonHttpResponse(400, $response);
     }
   }
 
@@ -39,9 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if ($sql1->get_result()->num_rows != 0) {
     $response = new ServerResponse(data: [], error: ["message" => "Email already exists"]);
 
-    http_response_code(409);
-    echo json_encode($response);
-    exit();
+    returnJsonHttpResponse(409, $response);
   }
 
 
@@ -64,11 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $sql3->execute();
 
 
-
   $payload = array($user_id);
   $hashed_payload = hash_hmac('sha256', json_encode($payload), $secret_key);
   $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => json_encode($hashed_payload)], error: []);
 
-  http_response_code(200);
-  echo json_encode($response);
+  returnJsonHttpResponse(200, $response);
 }
