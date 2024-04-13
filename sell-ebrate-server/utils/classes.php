@@ -3,14 +3,12 @@
 class ServerResponse
 
 {
-  public $message;
   public $data;
-  public $statusCode;
+  public $error;
 
-  public function __construct($message, $data, $statusCode)
+  public function __construct($data = null, $error = null)
   {
-    $this->message = $message;
     $this->data = $data;
-    $this->statusCode = $statusCode;
+    $this->error = $error;
   }
 }

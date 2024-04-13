@@ -1,6 +1,5 @@
 <?php
-
-
+include_once "utils/headers.php";
 
 $firstname = $_POST["firstname"];
 $lastname = $_POST["lastname"];
@@ -31,7 +30,7 @@ $hashed_password = password_hash($password, PASSWORD_DEFAULT, $options);
 $sql1 = $conn->prepare("INSERT INTO tblAccount (firstname, lastname, email, password, gender, birhdate) VALUES (?, ?, ?, ?, ?, ?)");
 $sql1->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, $birthdate);
 $sql1->execute();
-$user_id = $sql1->insert_id;
+$user_id = $sql2->insert_id;
 
 
 $sql2 = $conn->prepare("INSERT INTO tblUser (user_id, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -39,6 +38,15 @@ $sql2->bind_param("sssssss", $user_id, $street, $barangay, $municipality, $provi
 $sql2->execute();
 
 
-// TODO: return data here, all of it
-$response = new ServerResponse("User registered successfully", [], 200);
+$sql3 = $conn->prepare("INSERT INTO tblBuyer (buyer_id) VALUES (?)");
+$sql3->bind_param("s", $user_id);
+$sql3->execute();
+
+
+
+$payload = array($user_id);
+$hashed_payload = hash_hmac('sha256', json_encode($payload), $secret_key);
+$response = new ServerResponse(data: ["message" => "User registered successfully", "token" => json_encode($hashed_payload)], error: []);
+
+http_response_code(200);
 echo json_encode($response);
