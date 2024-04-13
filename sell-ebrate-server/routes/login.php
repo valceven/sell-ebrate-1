@@ -2,6 +2,8 @@
 include_once "../utils/headers.php";
 
 
+var_dump($_REQUEST);
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = $_REQUEST["email"];
   $password = $_REQUEST["password"];

@@ -48,7 +48,7 @@ export default function Login() {
 
     const res = await axios.post(serverDomain + "login", { params: values });
 
-    console.log(res.data);
+    console.log(res);
   }
   return (
     <div>
