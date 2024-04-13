@@ -7,14 +7,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = $_POST["password"];
 
   if (empty($email) || empty($password)) {
-    $response = new ServerResponse(data: [], error: ["message" => "Invalid request"]);
+    $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]);
 
     http_response_code(400);
     echo json_encode($response);
     exit();
   }
 
-  $sql1 = $mysqli->prepare("SELECT * FROM tblAccount WHERE email = ?");
+  $sql1 = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
   $sql1->bind_param("s", $email);
   $sql1->execute();
 

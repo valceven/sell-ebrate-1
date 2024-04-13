@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
 
-  $sql_check = $mysqli->prepare("SELECT * FROM tblAccount WHERE email = ?");
+  $sql_check = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
   $sql_check->bind_param("s", $email);
   $sql_check->execute();
 
