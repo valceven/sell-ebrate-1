@@ -2,7 +2,7 @@
 include_once "../utils/headers.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  $user_id = $_GET["user_id"];
+  $user_id = $_REQUEST["user_id"];
 
 
   if (empty($user_id)) {
