@@ -6,6 +6,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = $_POST["email"];
   $password = $_POST["password"];
 
+  echo $email;
+  echo $password;
+
   if (empty($email) || empty($password)) {
     $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]);
 

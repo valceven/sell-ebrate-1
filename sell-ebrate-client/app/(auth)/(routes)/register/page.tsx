@@ -30,39 +30,44 @@ import { useForm } from "react-hook-form";
 import { Gender } from "@/util/types";
 import { registerFormSchema } from "@/util/form-schema";
 import { cn } from "@/lib/utils";
+import { serverDomain } from "@/util/server";
 
 export default function RegisterBank() {
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      firstname: "",
-      lastname: "",
+      firstname: "firstname",
+      lastname: "lastname",
       email: "",
-      password: "",
+      password: "123123",
 
       gender: Gender.MALE,
-      birthdate: "",
+      birthdate: new Date().toString(),
 
       address: {
-        street: "",
-        barangay: "",
-        municipality: "",
-        province: "",
-        country: "",
-        zipcode: 0,
+        street: "street",
+        barangay: "brangay",
+        municipality: "muni",
+        province: "province",
+        country: "ph",
+        zipcode: 6046,
       },
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerFormSchema>) {
+  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
     console.log(values);
+
+    const res = await axios.post(serverDomain + "register", { params: values });
+
+    console.log(res);
   }
 
   return (
     <Card className="flex-1">
       <CardHeader>
         <CardTitle>Register</CardTitle>
-        <CardDescription>as Bank</CardDescription>
+        <CardDescription>insert cool desc</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -123,6 +128,20 @@ export default function RegisterBank() {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="******" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="birthdate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Birthdate</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
