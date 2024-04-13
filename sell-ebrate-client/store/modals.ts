@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type ModalType = "editProfile" | "otp";
+export type ModalType = "editProfile";
 
 interface ModalState {
   type: ModalType | null;

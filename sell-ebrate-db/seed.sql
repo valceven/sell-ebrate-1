@@ -1,4 +1,5 @@
 
+
 -- Insert dummy data into tblAccount
 INSERT INTO tblAccount (firstname, lastname, email, password, gender, birthdate) VALUES
 ('John', 'Doe', 'johndoe@example.com', 'password1', 'male', '1990-01-01'),

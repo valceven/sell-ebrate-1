@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $hashed_password = password_hash($password, PASSWORD_DEFAULT, $options);
 
   $sql1 = $conn->prepare("INSERT INTO tblAccount (firstname, lastname, email, password, gender, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
-  $sql1->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, $birthdate);
+  $sql1->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, date('Y-m-d H:i:s', strtotime($birthdate)));
   $sql1->execute();
   $user_id = $sql1->insert_id;
 

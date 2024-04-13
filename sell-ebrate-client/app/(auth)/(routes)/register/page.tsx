@@ -40,6 +40,7 @@ import { registerFormSchema } from "@/util/form-schema";
 import { cn } from "@/lib/utils";
 import { serverDomain, urlParamsSerializer } from "@/util/server";
 import { CalendarIcon } from "lucide-react";
+import { useUserStore } from "@/store/user";
 
 export default function RegisterBank() {
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -64,14 +65,19 @@ export default function RegisterBank() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
-    console.log(values);
+  const { setToken } = useUserStore();
 
-    const res = await axios.post(serverDomain + "register.php", {
+  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
+    const { data } = await axios.post(serverDomain + "register.php", {
       ...values,
     });
 
-    console.log(res);
+    if (data.error) {
+      // TODO: error toast here
+    } else {
+      // TODO: good toast here
+      setToken(data.data.token);
+    }
   }
 
   return (
