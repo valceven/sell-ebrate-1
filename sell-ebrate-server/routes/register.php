@@ -10,12 +10,15 @@ $password = $_POST["password"];
 $gender = $_POST["gender"];
 $birthdate = $_POST["birthdate"];
 
-$street = $_POST["street"];
-$barangay = $_POST["barangay"];
-$municipality = $_POST["municipality"];
-$province = $_POST["province"];
-$country = $_POST["country"];
-$zipcode = $_POST["zipcode"];
+
+$address = $_POST["address"];
+
+$street = $address["street"];
+$barangay = $address["barangay"];
+$municipality = $address["municipality"];
+$province = $address["province"];
+$country = $address["country"];
+$zipcode = $address["zipcode"];
 
 
 $sql_check = $mysqli->prepare("SELECT * FROM tblAccount WHERE email = ?");
