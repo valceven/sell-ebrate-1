@@ -61,11 +61,9 @@ CREATE TABLE tblCartItem (
 
 CREATE TABLE tblOrder (
   order_id BIGINT AUTO_INCREMENT PRIMARY_KEY,
-
 );
 
 CREATE TABLE tblOrderItem (
-
   order_id BIGINT,
   product_id BIGINT,
 
@@ -99,24 +97,52 @@ CREATE TABLE tblReply (
 );
 
 
+ALTER TABLE tblUser
+ADD CONSTRAINT FK_User_Account
+FOREIGN KEY (user_id) REFERENCES tblAccount(account_id);
 
+ALTER TABLE tblSeller
+ADD CONSTRAINT FK_Seller_Account
+FOREIGN KEY (seller_id) REFERENCES tblAccount(account_id);
 
-ALTER TABLE `tblAccount`
-  ADD CONSTRAINT `tbluser_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tblAccount` (`account_id`);
-COMMIT;
+ALTER TABLE tblBuyer
+ADD CONSTRAINT FK_Buyer_Account
+FOREIGN KEY (buyer_id) REFERENCES tblAccount(account_id);
 
-ALTER TABLE `tblAccount`
-  ADD CONSTRAINT `tblbuyer_ibfk_1` FOREIGN KEY (`buyer_id`) REFERENCES `tblAccount` (`account_id`);
-COMMIT;
+ALTER TABLE tblProduct
+ADD CONSTRAINT FK_Product_Seller
+FOREIGN KEY (seller_id) REFERENCES tblSeller(seller_id);
 
-ALTER TABLE `tblAccount`
-  ADD CONSTRAINT `tblseller_ibfk_1` FOREIGN KEY (`seller_id`) REFERENCES `tblAccount` (`account_id`);
-COMMIT;
+ALTER TABLE tblCart
+ADD CONSTRAINT FK_Cart_User
+FOREIGN KEY (user_id) REFERENCES tblUser(user_id);
 
-ALTER TABLE `tblProduct`
-  ADD CONSTRAINT `tblseller_ibfk_1` FOREIGN KEY (`seller_id`) REFERENCES `tblProduct` (`seller_id`);
-COMMIT;
+ALTER TABLE tblCartItem
+ADD CONSTRAINT FK_CartItem_Cart
+FOREIGN KEY (cart_id) REFERENCES tblCart(cart_id),
+ADD CONSTRAINT FK_CartItem_Product
+FOREIGN KEY (product_id) REFERENCES tblProduct(product_id);
 
+ALTER TABLE tblOrder
+ADD CONSTRAINT FK_Order_Buyer
+FOREIGN KEY (buyer_id) REFERENCES tblBuyer(buyer_id);
 
+ALTER TABLE tblOrderItem
+ADD CONSTRAINT FK_OrderItem_Order
+FOREIGN KEY (order_id) REFERENCES tblOrder(order_id),
+ADD CONSTRAINT FK_OrderItem_Product
+FOREIGN KEY (product_id) REFERENCES tblProduct(product_id);
 
+ALTER TABLE tblPayment
+ADD CONSTRAINT FK_Payment_Order
+FOREIGN KEY (order_id) REFERENCES tblOrder(order_id),
+ADD CONSTRAINT FK_Payment_Buyer
+FOREIGN KEY (buyer_id) REFERENCES tblBuyer(buyer_id);
 
+ALTER TABLE tblReview
+ADD CONSTRAINT FK_Review_User
+FOREIGN KEY (user_id) REFERENCES tblUser(user_id);
+
+ALTER TABLE tblReply
+ADD CONSTRAINT FK_Reply_Review
+FOREIGN KEY (reply_id) REFERENCES tblReview(reply_id);

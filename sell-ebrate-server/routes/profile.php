@@ -1,4 +1,6 @@
 <?php
+include_once "utils/headers.php";
+
 $user_id = $_POST["user_id"];
 
 $sql1 = $mysqli->prepare("SELECT * FROM tblAccount WHERE account_id = ?");

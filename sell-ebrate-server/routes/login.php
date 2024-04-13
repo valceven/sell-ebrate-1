@@ -1,5 +1,4 @@
 <?php
-
 include_once "utils/headers.php";
 
 $email = $_POST["email"];
@@ -10,7 +9,6 @@ $sql1->bind_param("s", $email);
 $sql1->execute();
 
 $result = $sql1->get_result();
-
 
 if ($result->num_rows == 0) {
   $response = new ServerResponse(data: [], error: ["message" => "Invalid credentials"]);

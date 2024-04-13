@@ -18,11 +18,18 @@ $country = $_POST["country"];
 $zipcode = $_POST["zipcode"];
 
 
-// FIX: do some checks here first before data is added
+$sql_check = $mysqli->prepare("SELECT * FROM tblAccount WHERE email = ?");
+$sql_check->bind_param("s", $email);
+$sql_check->execute();
 
+if ($sql1->get_result()->num_rows != 0) {
+  $response = new ServerResponse(data: [], error: ["message" => "Email already exists"]);
 
+  http_response_code(409);
+  echo json_encode($response);
+  exit();
+}
 
-// TODO: passowrd hash
 
 $options = ['cost' => 12];
 $hashed_password = password_hash($password, PASSWORD_DEFAULT, $options);
