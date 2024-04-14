@@ -13,7 +13,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -41,13 +40,14 @@ import { cn } from "@/lib/utils";
 import { serverDomain } from "@/util/server";
 import { CalendarIcon } from "lucide-react";
 import { useUserStore } from "@/store/user";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function RegisterBank() {
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      firstname: "firstname",
-      lastname: "lastname",
+      firstName: "firstname",
+      lastName: "lastname",
       email: "",
       password: "123123",
 
@@ -66,16 +66,20 @@ export default function RegisterBank() {
   });
 
   const { setToken } = useUserStore();
+  const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
-    const { data } = await axios.post(serverDomain + "register.php", {
+    const { data } = await axios.post(serverDomain + "auth/register", {
       ...values,
     });
 
     if (data.error) {
       // TODO: error toast here
+      toast({ title: "Register Error", description: data.error.message });
     } else {
       // TODO: good toast here
+      toast({ title: "Register Success", description: data.data.message });
+      localStorage.setItem("token", data.data.token);
       setToken(data.data.token);
     }
   }
@@ -92,7 +96,7 @@ export default function RegisterBank() {
             <div className="flex gap-2">
               <FormField
                 control={form.control}
-                name="firstname"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormLabel>Firstname</FormLabel>
@@ -106,7 +110,7 @@ export default function RegisterBank() {
 
               <FormField
                 control={form.control}
-                name="lastname"
+                name="lastName"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormLabel>Lastname</FormLabel>

@@ -27,7 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import axios from "axios";
-import { serverDomain, urlParamsSerializer } from "@/util/server";
+import { serverDomain } from "@/util/server";
 import { useUserStore } from "@/store/user";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -45,22 +45,19 @@ export default function Login() {
     },
   });
 
-  const { setToken } = useUserStore();
+  const { setToken, token } = useUserStore();
   const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    const { data } = await axios.post(serverDomain + "login.php", {
+    const { data } = await axios.post(serverDomain + "auth/login", {
       ...values,
     });
 
-    console.log(data);
-
     if (data.error) {
-      // TODO: error toast here
       toast({ title: "Login Error", description: data.error.message });
     } else {
-      // TODO: good toast here
       toast({ title: "Login Success", description: data.data.message });
+      localStorage.setItem("token", data.data.token);
       setToken(data.data.token);
     }
   }

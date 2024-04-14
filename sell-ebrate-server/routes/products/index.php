@@ -1,6 +1,6 @@
 
 <?php
-include_once "../utils/headers.php";
+include_once "../../utils/headers.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
   $sql1 = $conn->prepare("SELECT * FROM tblProduct");

@@ -1,12 +1,12 @@
 
 <?php
-$servername = "127.0.0.1";
+$serverName = "127.0.0.1";
 $username = "root";
 $password = "";
-$dbname = "dbsajulgaf1";
+$dbName = "dbsajulgaf1";
 
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($serverName, $username, $password, $dbName);
 
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);

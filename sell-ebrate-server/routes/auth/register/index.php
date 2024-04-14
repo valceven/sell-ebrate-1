@@ -1,13 +1,11 @@
 <?php
-include_once "../utils/headers.php";
+include_once "../../../utils/headers.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $jsonData = getBodyParameters();
 
-  $rawData = file_get_contents('php://input');
-  $jsonData = json_decode($rawData, true);
-
-  $firstname = $jsonData["firstname"];
-  $lastname = $jsonData["lastname"];
+  $firstName = $jsonData["firstName"];
+  $lastName = $jsonData["lastName"];
 
   $email = $jsonData["email"];
   $password = $jsonData["password"];
@@ -49,27 +47,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
   $options = ['cost' => 12];
-  $hashed_password = password_hash($password, PASSWORD_DEFAULT, $options);
+  $hashedPassword = password_hash($password, PASSWORD_DEFAULT, $options);
 
-  $sql1 = $conn->prepare("INSERT INTO tblAccount (firstname, lastname, email, password, gender, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
-  $sql1->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, date('Y-m-d H:i:s', strtotime($birthdate)));
+  $sql1 = $conn->prepare("INSERT INTO tblAccount (firstName, lastName, email, password, gender, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
+  $sql1->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $gender, date('Y-m-d H:i:s', strtotime($birthdate)));
   $sql1->execute();
-  $user_id = $sql1->insert_id;
+  $userId = $sql1->insert_id;
 
 
-  $sql2 = $conn->prepare("INSERT INTO tblUser (user_id, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
-  $sql2->bind_param("sssssss", $user_id, $street, $barangay, $municipality, $province, $country, $zipcode);
+  $sql2 = $conn->prepare("INSERT INTO tblUser (userId, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  $sql2->bind_param("sssssss", $userId, $street, $barangay, $municipality, $province, $country, $zipcode);
   $sql2->execute();
 
 
-  $sql3 = $conn->prepare("INSERT INTO tblBuyer (buyer_id) VALUES (?)");
-  $sql3->bind_param("s", $user_id);
+  $sql3 = $conn->prepare("INSERT INTO tblBuyer (buyerId) VALUES (?)");
+  $sql3->bind_param("s", $userId);
   $sql3->execute();
 
 
-  $payload = array($user_id);
-  $hashed_payload = hash_hmac('sha256', json_encode($payload), $secret_key);
-  $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => json_encode($hashed_payload)]);
+  $payload = array($userId);
+  $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
+  $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => $hashedPayload]);
 
   returnJsonHttpResponse(200, $response);
 }

@@ -7,7 +7,7 @@ interface UserStateType {
 }
 
 export const useUserStore = create<UserStateType>((set) => ({
-  token: "",
+  token: localStorage.getItem("token") || "",
   setToken: (token: string) => set({ token: token }),
   removeToken: () => set({ token: "" }),
 }));

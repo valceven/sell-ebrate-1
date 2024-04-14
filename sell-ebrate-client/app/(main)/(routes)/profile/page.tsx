@@ -6,19 +6,23 @@ import { serverDomain } from "@/util/server";
 import { useRouter } from "next/router";
 import { useUserStore } from "@/store/user";
 
-function useGetProfile(userId: string | null) {
+function useGetProfile(token: string | null) {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const { data } = await axios.get(serverDomain + "profile.php", {
-        auth: {},
+      const { data } = await axios.get(serverDomain + "profile", {
+        headers: {
+          Authorization: token,
+        },
       } as any);
+
       // TODO: toast here
+
       setProfile(data.data.profile);
     };
     fetchProfile();
-  }, [userId]);
+  }, [token]);
 
   return profile;
 }

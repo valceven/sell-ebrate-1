@@ -1,20 +1,13 @@
 <?php
-include_once "../utils/headers.php";
+include_once "../../utils/headers.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  $rawData = file_get_contents('php://input');
-  $jsonData = json_decode($rawData, true);
 
-  $user_id = $jsonData["user_id"];
+  $jsonData = getBodyParameters();
+  $token = getAuthToken();
 
-  if (empty($user_id)) {
-    $response = new ServerResponse(error: ["message" => "Missing required fields"]);
-    returnJsonHttpResponse(400, $response);
-  }
-
-
-  $sql1 = $conn->prepare("SELECT * FROM tblAccount WHERE account_id = ?");
-  $sql1->bind_param("i", $user_id);
+  $sql1 = $conn->prepare("SELECT * FROM tblAccount WHERE accountId = ?");
+  $sql1->bind_param("i", $userId);
   $sql1->execute();
 
   $result = $sql1->get_result();

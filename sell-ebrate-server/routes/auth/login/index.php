@@ -1,14 +1,13 @@
 <?php
-include_once "../utils/headers.php";
+
+include_once "../../../utils/headers.php";
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $rawData = file_get_contents('php://input');
-  $jsonData = json_decode($rawData, true);
+  $jsonData = getBodyParameters();
 
   $email = $jsonData["email"];
   $password = $jsonData["password"];
-
 
   if (empty($email) || empty($password)) {
     $response = new ServerResponse(error: ["message" => "Missing required fields"]);
@@ -28,18 +27,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $user = $result->fetch_assoc();
 
-
   if (!password_verify($password, $user["password"])) {
-    // TODO: maybe its best this way para secure
     $response = new ServerResponse(error: ["message" => "Invalid credentials"]);
     returnJsonHttpResponse(401, $response);
   }
 
 
   // TODO: its used twice, maybe best to put it in a function
-  $payload = array("user_id" => $user["user_id"]);
-  $hashed_payload = hash_hmac('sha256', json_encode($payload), $secret_key);
-  $response = new ServerResponse(data: ["message" => "User logged in successfully", "token" => json_encode($hashed_payload)]);
+  $payload = array("userId" => $user["userId"]);
+  $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
+  $response = new ServerResponse(data: ["message" => "User logged in successfully", "token" => $hashedPayload]);
 
   returnJsonHttpResponse(200, $response);
 }

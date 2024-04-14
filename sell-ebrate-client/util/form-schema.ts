@@ -2,8 +2,8 @@ import { z } from "zod";
 import { Gender } from "./types";
 
 export const registerFormSchema = z.object({
-  firstname: z.string().min(2).max(20),
-  lastname: z.string().min(2).max(20),
+  firstName: z.string().min(2).max(20),
+  lastName: z.string().min(2).max(20),
   email: z.string().email(),
   password: z.string(),
 
