@@ -1,3 +1,4 @@
+import Navbar from "@/components/navbar/navbar";
 import React from "react";
 
 export default function MainLayout({
@@ -5,5 +6,10 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return (
+    <div>
+      <Navbar />
+      {children}
+    </div>
+  );
 }

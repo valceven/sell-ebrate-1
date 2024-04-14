@@ -38,7 +38,7 @@ import { useForm } from "react-hook-form";
 import { Gender } from "@/util/types";
 import { registerFormSchema } from "@/util/form-schema";
 import { cn } from "@/lib/utils";
-import { serverDomain, urlParamsSerializer } from "@/util/server";
+import { serverDomain } from "@/util/server";
 import { CalendarIcon } from "lucide-react";
 import { useUserStore } from "@/store/user";
 
