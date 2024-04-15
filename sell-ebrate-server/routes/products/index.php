@@ -2,19 +2,20 @@
 <?php
 include_once "../../utils/headers.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  $sql1 = $conn->prepare("SELECT * FROM tblProduct");
-  $sql1->execute();
 
-  $result = $sql1->get_result();
+switch ($_SERVER["REQUEST_METHOD"]) {
+  case "GET":
+    $sql1 = $conn->prepare("SELECT * FROM tblProduct");
+    $sql1->execute();
 
-  $products = [];
-  while ($row = $result->fetch_assoc()) {
-    $products[] = $row;
-  }
+    $result = $sql1->get_result();
 
-  $response = new ServerResponse(data: ["message" => "Products data fetched successfully", "products" => $products], error: []);
+    $products = [];
+    while ($row = $result->fetch_assoc()) {
+      $products[] = $row;
+    }
 
-  http_response_code(200);
-  echo json_encode($response);
+    $response = new ServerResponse(data: ["message" => "Products data fetched successfully", "products" => $products], error: []);
+    returnJsonHttpResponse(200, $response);
+  case "POST":
 }
