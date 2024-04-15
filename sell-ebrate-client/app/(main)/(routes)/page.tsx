@@ -4,7 +4,7 @@ import { serverDomain } from "@/util/server";
 import ProductCard from "@/components/product-card";
 
 export default async function Home() {
-  const { data } = await axios.get(serverDomain + "products");
+  const { data } = await axios.get(serverDomain + "product");
 
   return (
     <main>

@@ -1,59 +1,70 @@
 <?php
 include_once "../../../utils/headers.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $jsonData = getBodyParameters();
 
-  $firstName = $jsonData["firstName"];
-  $lastName = $jsonData["lastName"];
+switch ($_SERVER["REQUEST_METHOD"]) {
+  case "GET":
 
-  $email = $jsonData["email"];
-  $password = $jsonData["password"];
+  case "POST":
+    $jsonData = getBodyParameters();
 
-  $gender = $jsonData["gender"];
-  $birthdate = $jsonData["birthdate"];
+    $requiredFieldsAccount = ["firstName", "lastName", "email", "password", "gender", "birthdate", "address"];
+    $requiredFieldsUser = ["street", "barangay", "municipality", "province", "country", "zipcode"];
 
-  $address = $jsonData["address"];
+    $firstName = $jsonData["firstName"];
+    $lastName = $jsonData["lastName"];
 
-  $street = $address["street"];
-  $barangay = $address["barangay"];
-  $municipality = $address["municipality"];
-  $province = $address["province"];
-  $country = $address["country"];
-  $zipcode = $address["zipcode"];
+    $email = $jsonData["email"];
+    $password = $jsonData["password"];
 
+    $gender = $jsonData["gender"];
+    $birthdate = $jsonData["birthdate"];
 
-  $sql_check = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
-  $sql_check->bind_param("s", $email);
-  $sql_check->execute();
+    $address = $jsonData["address"];
 
-
-  if ($sql_check->get_result()->num_rows != 0) {
-    $response = new ServerResponse(error: ["message" => "Email already exists"]);
-
-    returnJsonHttpResponse(409, $response);
-  }
+    $street = $address["street"];
+    $barangay = $address["barangay"];
+    $municipality = $address["municipality"];
+    $province = $address["province"];
+    $country = $address["country"];
+    $zipcode = $address["zipcode"];
 
 
-  $options = ['cost' => 12];
-  $hashedPassword = password_hash($password, PASSWORD_DEFAULT, $options);
+    $sql_check = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
+    $sql_check->bind_param("s", $email);
+    $sql_check->execute();
 
-  $sql1 = $conn->prepare("INSERT INTO tblAccount (firstName, lastName, email, password, gender, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
-  $sql1->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $gender, date('Y-m-d H:i:s', strtotime($birthdate)));
-  $sql1->execute();
-  $userId = $sql1->insert_id;
 
-  $sql2 = $conn->prepare("INSERT INTO tblUser (userId, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
-  $sql2->bind_param("sssssss", $userId, $street, $barangay, $municipality, $province, $country, $zipcode);
-  $sql2->execute();
+    // TODO: better make this into a function, or just use the sql error thing
+    if ($sql_check->get_result()->num_rows != 0) {
+      $response = new ServerResponse(error: ["message" => "Email already exists"]);
+      returnJsonHttpResponse(409, $response);
+    }
 
-  $sql3 = $conn->prepare("INSERT INTO tblBuyer (buyerId) VALUES (?)");
-  $sql3->bind_param("s", $userId);
-  $sql3->execute();
 
-  $payload = array($userId);
-  $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
-  $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => $hashedPayload]);
+    $options = ['cost' => 12];
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT, $options);
 
-  returnJsonHttpResponse(200, $response);
+    $sql1 = $conn->prepare("INSERT INTO tblAccount (firstName, lastName, email, password, gender, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
+    $sql1->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $gender, date('Y-m-d H:i:s', strtotime($birthdate)));
+    $sql1->execute();
+    $userId = $sql1->insert_id;
+
+    $sql2 = $conn->prepare("INSERT INTO tblUser (userId, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $sql2->bind_param("sssssss", $userId, $street, $barangay, $municipality, $province, $country, $zipcode);
+    $sql2->execute();
+
+    $sql3 = $conn->prepare("INSERT INTO tblBuyer (buyerId) VALUES (?)");
+    $sql3->bind_param("s", $userId);
+    $sql3->execute();
+
+    $payload = array($userId);
+    $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
+    $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => $hashedPayload]);
+
+    returnJsonHttpResponse(200, $response);
+
+  case "UPDATE":
+
+  case "DELETE":
 }
