@@ -23,17 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $zipcode = $address["zipcode"];
 
 
-  // FIX: i hate validation
-  /* $requiredFields = ["firstname", "lastname", "email", "password", "gender", "birthdate", "address"]; */
-
-  /* foreach ($requiredFields as $field) { */
-  /*   if (empty($jsonData[$field])) { */
-  /*     $response = new ServerResponse(data: [], error: ["message" => "Missing required fields"]); */
-  /*     returnJsonHttpResponse(400, $response); */
-  /*   } */
-  /* } */
-
-
   $sql_check = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
   $sql_check->bind_param("s", $email);
   $sql_check->execute();
@@ -54,16 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $sql1->execute();
   $userId = $sql1->insert_id;
 
-
   $sql2 = $conn->prepare("INSERT INTO tblUser (userId, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
   $sql2->bind_param("sssssss", $userId, $street, $barangay, $municipality, $province, $country, $zipcode);
   $sql2->execute();
 
-
   $sql3 = $conn->prepare("INSERT INTO tblBuyer (buyerId) VALUES (?)");
   $sql3->bind_param("s", $userId);
   $sql3->execute();
-
 
   $payload = array($userId);
   $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
