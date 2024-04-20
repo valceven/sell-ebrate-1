@@ -106,7 +106,6 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Login</Button>
 
               <Separator />
 

@@ -16,7 +16,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
   case "POST":
     $jsonData = getBodyParameters();
-    $requiredFields = ["sellerId", "productName", "description", "quantity", "price"];
+    $$requiredFields = ["", "productName", "description", "quantity", "price"];
     $fields = [];
 
     foreach ($requiredFields as $field) {
