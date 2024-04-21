@@ -6,10 +6,16 @@ switch ($_SERVER["REQUEST_METHOD"]) {
   case "GET":
 
   case "POST":
+
+    // FIX: shorten this using good programming pracitces
+
+    $requiredFieldsAccount = ["firstName", "lastName", "email", "password", "gender", "birthdate"];
+    $requiredFieldsUser = ["street", "barangay", "municipality", "province", "country", "zipcode"];
+
     $jsonData = getBodyParameters();
 
-    $requiredFieldsAccount = ["firstName", "lastName", "email", "password", "gender", "birthdate", "address"];
-    $requiredFieldsUser = ["street", "barangay", "municipality", "province", "country", "zipcode"];
+    $fieldsAccount = checkFields($jsonData, $requiredFieldsAccount);
+    $fieldsUser = checkFields($jsonData["address"], $requiredFieldsUser);
 
     $firstName = $jsonData["firstName"];
     $lastName = $jsonData["lastName"];
@@ -29,18 +35,13 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     $country = $address["country"];
     $zipcode = $address["zipcode"];
 
+    $sql_check = "SELECT * FROM tblAccount WHERE email = ?";
+    $result = $conn->execute_query($sql_check, [$fieldsAccount["email"]]);
 
-    $sql_check = $conn->prepare("SELECT * FROM tblAccount WHERE email = ?");
-    $sql_check->bind_param("s", $email);
-    $sql_check->execute();
-
-
-    // TODO: better make this into a function, or just use the sql error thing
-    if ($sql_check->get_result()->num_rows != 0) {
+    if ($result->num_rows != 0) {
       $response = new ServerResponse(error: ["message" => "Email already exists"]);
       returnJsonHttpResponse(409, $response);
     }
-
 
     $options = ['cost' => 12];
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT, $options);
@@ -48,6 +49,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     $sql1 = $conn->prepare("INSERT INTO tblAccount (firstName, lastName, email, password, gender, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
     $sql1->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $gender, date('Y-m-d H:i:s', strtotime($birthdate)));
     $sql1->execute();
+
     $userId = $sql1->insert_id;
 
     $sql2 = $conn->prepare("INSERT INTO tblUser (userId, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -58,10 +60,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     $sql3->bind_param("s", $userId);
     $sql3->execute();
 
-    $payload = array($userId);
-    $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
-    $response = new ServerResponse(data: ["message" => "User registered successfully", "token" => $hashedPayload]);
-
+    $hashedPayload = createToken($user);
+    $response = new ServerResponse(data: ["message" => "User registered in successfully", "token" => $hashedPayload]);
     returnJsonHttpResponse(200, $response);
 
   case "UPDATE":

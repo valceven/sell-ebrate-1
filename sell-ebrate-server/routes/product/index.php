@@ -16,15 +16,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
   case "POST":
     $jsonData = getBodyParameters();
-    $$requiredFields = ["", "productName", "description", "quantity", "price"];
-    $fields = [];
-
-    foreach ($requiredFields as $field) {
-      if (empty($jsonData[$field])) {
-        returnJsonHttpResponse(400, new ServerResponse(error: ["message" => "Missing required fields!"]));
-      }
-      $fields[$field] = $jsonData[$field];
-    }
+    $requiredFields = ["sellerId", "productName", "description", "quantity", "price"];
+    $fields = fieldsCheck($jsonData, $requiredFields);
 
     // TODO:  get keys
     $sql1 = $conn->prepare("INSERT INTO tblProduct( " . implode(',', $fields) . " ) VALUES(?, ?, ?, ?, ?, ?)");

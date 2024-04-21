@@ -1,7 +1,9 @@
 <?php
 
+include_once "./env.php";
+
 /**
- * returnJsonHttpResponse
+ * Return Json Http Response
  *
  * returns a json response $data;
  *
@@ -23,7 +25,7 @@ function  returnJsonHttpResponse(int $httpCode, $data): string
 
 
 /**
- * getBodyParameters
+ * Get Body Parameters
  *
  * grabs the body parameters of a request and passes it as an assoc
  *
@@ -39,14 +41,42 @@ function getBodyParameters(): array
 
 
 /**
- * createToken
+ * Create Token
  *
  * makes a token out of a bunch of data
  *
- * @return array
+ * @return string
  **/
-function createToken($data)
+function createToken($user)
 {
+  global $secretKey;
   $payload = array("userId" => $user["userId"]);
   $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
+  return $hashedPayload;
+}
+
+
+/**
+ * Fields Check
+ *
+ * checks if required fields are present in data
+ *
+ * @return array
+ **/
+function checkFields($data, $requiredFields): array
+{
+  if ($data == null) {
+    returnJsonHttpResponse(400, new ServerResponse(error: ["message" => "Missing required fields!"]));
+  }
+
+  $fields = [];
+
+  foreach ($requiredFields as $field) {
+    if (empty($data[$field])) {
+      returnJsonHttpResponse(400, new ServerResponse(error: ["message" => "Missing required fields! Field " . $field . " may be missing..."]));
+    }
+    $fields[$field] = $data[$field];
+  }
+
+  return $fields;
 }
