@@ -29,16 +29,17 @@ import {
 } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 
+import { Gender } from "@/util/types";
+import { CalendarIcon } from "lucide-react";
+
 import axios from "axios";
 import { format } from "date-fns";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Gender } from "@/util/types";
 import { registerFormSchema } from "@/util/form-schema";
 import { cn } from "@/lib/utils";
 import { serverDomain } from "@/util/server";
-import { CalendarIcon } from "lucide-react";
 import { useUserStore } from "@/store/user";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -83,6 +84,7 @@ export default function RegisterBank() {
       setToken(data.data.token);
     }
   }
+
 
   return (
     <Card className="flex-1">

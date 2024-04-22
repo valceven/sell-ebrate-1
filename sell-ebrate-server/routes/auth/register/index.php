@@ -6,9 +6,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
   case "GET":
 
   case "POST":
-
     // FIX: shorten this using good programming pracitces
-
     $requiredFieldsAccount = ["firstName", "lastName", "email", "password", "gender", "birthdate"];
     $requiredFieldsUser = ["street", "barangay", "municipality", "province", "country", "zipcode"];
 

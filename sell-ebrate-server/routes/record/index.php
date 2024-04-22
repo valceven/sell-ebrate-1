@@ -1,5 +1,14 @@
-<?php
 
+<?php
 include_once "../../utils/headers.php";
 
-// TODO: some read records bullshit here
+
+switch ($_SERVER["REQUEST_METHOD"]) {
+  case "GET":
+
+  case "POST":
+
+  case "UPDATE":
+
+  case "DELETE":
+}

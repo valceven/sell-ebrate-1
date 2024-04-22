@@ -17,7 +17,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
   case "POST":
     $jsonData = getBodyParameters();
     $requiredFields = ["sellerId", "productName", "description", "quantity", "price"];
-    $fields = fieldsCheck($jsonData, $requiredFields);
+    $fields = checkFields($jsonData, $requiredFields);
 
     // TODO:  get keys
     $sql1 = $conn->prepare("INSERT INTO tblProduct( " . implode(',', $fields) . " ) VALUES(?, ?, ?, ?, ?, ?)");
