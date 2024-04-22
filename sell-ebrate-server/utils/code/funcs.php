@@ -40,6 +40,18 @@ function getBodyParameters(): array
 }
 
 
+function cleanData($data): string
+{
+  return base64_encode(urlencode(serialize($data)));
+}
+
+
+function uncleanData(string $data)
+{
+  return unserialize(urldecode(base64_decode($data)));
+}
+
+
 /**
  * Create Token
  *
@@ -50,10 +62,17 @@ function getBodyParameters(): array
 function createToken($user)
 {
   global $secretKey;
-  $payload = array("userId" => $user["userId"]);
-  $hashedPayload = 'Bearer ' . hash_hmac('sha256', json_encode($payload), $secretKey);
-  return $hashedPayload;
+
+  $header = cleanData([
+    "alg" => "HS256",
+    "typ" => "JWT"
+  ]);
+  $payload = cleanData($user);
+  $signature = hash_hmac('sha256', $header . '.' . $payload, $secretKey);
+
+  return 'Bearer ' . $header . '.' . $payload . '.' . $signature;
 }
+
 
 
 /**

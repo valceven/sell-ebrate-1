@@ -48,18 +48,18 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     $sql1->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $gender, date('Y-m-d H:i:s', strtotime($birthdate)));
     $sql1->execute();
 
-    $userId = $sql1->insert_id;
+    $account = $sql1->get_result()->fetch_assoc();
 
     $sql2 = $conn->prepare("INSERT INTO tblUser (userId, street, barangay, municipality, province, country, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $sql2->bind_param("sssssss", $userId, $street, $barangay, $municipality, $province, $country, $zipcode);
+    $sql2->bind_param("sssssss", $account["accountId"], $street, $barangay, $municipality, $province, $country, $zipcode);
     $sql2->execute();
 
     $sql3 = $conn->prepare("INSERT INTO tblBuyer (buyerId) VALUES (?)");
-    $sql3->bind_param("s", $userId);
+    $sql3->bind_param("s", $account["accountId"]);
     $sql3->execute();
 
-    $hashedPayload = createToken($user);
-    $response = new ServerResponse(data: ["message" => "User registered in successfully", "token" => $hashedPayload]);
+    $hashedToken = createToken($account);
+    $response = new ServerResponse(data: ["message" => "User registered in successfully", "token" => $hashedToken]);
     returnJsonHttpResponse(200, $response);
 
   case "UPDATE":

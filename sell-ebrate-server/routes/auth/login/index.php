@@ -5,6 +5,7 @@ include_once "../../../utils/headers.php";
 switch ($_SERVER["REQUEST_METHOD"]) {
   case "GET":
 
+
   case "POST":
     $requiredFields = ["email", "password"];
 
@@ -19,14 +20,15 @@ switch ($_SERVER["REQUEST_METHOD"]) {
       returnJsonHttpResponse(401, $response);
     }
 
-    $user = $result->fetch_assoc();
-    if (!password_verify($fields["password"], $user["password"])) {
+    $account = $result->fetch_assoc();
+
+    if (!password_verify($fields["password"], $account["password"])) {
       $response = new ServerResponse(error: ["message" => "Invalid credentials!"]);
       returnJsonHttpResponse(401, $response);
     }
 
-    $hashedPayload = createToken($user);
-    $response = new ServerResponse(data: ["message" => "User logged in successfully", "token" => $hashedPayload]);
+    $hashedToken = createToken($account);
+    $response = new ServerResponse(data: ["message" => "User logged in successfully", "token" => $hashedToken]);
     returnJsonHttpResponse(200, $response);
 
   case "UPDATE":
