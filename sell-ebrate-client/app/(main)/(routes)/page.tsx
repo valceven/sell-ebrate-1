@@ -3,15 +3,24 @@ import axios from "axios";
 import { serverDomain } from "@/util/server";
 import ProductCard from "@/components/product-card";
 
-export default async function Home() {
+export async function getServerComponentProps() {
   const { data } = await axios.get(serverDomain + "product");
+
+  return { data };
+}
+
+export default function Home({ data }) {
+
+  if (!data || !data.products) {
+    return <div>No products available</div>;
+  }
 
   return (
     <main>
       <div className="flex flex-wrap">
-        {data.data.products.map((product: any) => {
-          return <ProductCard key={product.id} product={product} />;
-        })}
+        {data.products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
       </div>
     </main>
   );

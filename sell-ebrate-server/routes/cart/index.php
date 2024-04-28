@@ -9,7 +9,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     $payload = getAuthPayload();
 
     $sql1 = "SELECT * FROM tblCart a JOIN tblCartItem b ON a.cartId = b.cartId AND a.userId = ? JOIN tblProduct c ON b.productId = c.productId";
-    $result = $conn->execute_query($sql1, [$payload["accountId"]]);
+    $result = $conn->execute_query($sql1, [$payload["account_id"]]);
     $cart = $result->fetch_all(MYSQLI_ASSOC);
 
     $response = new ServerResponse(data: ["message" => "User cart fetched successfully", "cart" => $cart]);

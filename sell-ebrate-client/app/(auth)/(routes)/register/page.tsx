@@ -61,7 +61,7 @@ export default function RegisterBank() {
         municipality: "muni",
         province: "province",
         country: "ph",
-        zipcode: 6046,
+      //  zipcode: 6046,
       },
     },
   });
@@ -70,6 +70,7 @@ export default function RegisterBank() {
   const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
+    console.log(values); // Log values here
     const { data } = await axios.post(serverDomain + "auth/register", {
       ...values,
     });
@@ -303,7 +304,7 @@ export default function RegisterBank() {
               )}
             />
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="address.zipcode"
               render={({ field }) => (
@@ -315,7 +316,7 @@ export default function RegisterBank() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <Button type="submit">Sign Up</Button>
           </form>

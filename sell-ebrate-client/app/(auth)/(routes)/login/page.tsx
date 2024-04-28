@@ -62,6 +62,7 @@ export default function Login() {
     }
   }
 
+  
   return (
     <div>
       <Card className="w-full h-full">
@@ -110,7 +111,7 @@ export default function Login() {
               <Separator />
 
               {/* TODO: add a google button here */}
-              <Button type="button">Google button here</Button>
+              <Button type="button" onClick={onSubmit}>Google button here</Button>
             </form>
           </Form>
         </CardContent>
