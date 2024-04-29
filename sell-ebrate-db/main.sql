@@ -58,7 +58,9 @@ CREATE TABLE tblCartItem (
 CREATE TABLE tblOrder (
   orderId BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-  buyerId BIGINT
+  buyerId BIGINT,
+
+  isPaid BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE tblOrderItem (
