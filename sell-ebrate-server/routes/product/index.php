@@ -1,14 +1,14 @@
-
 <?php
+
 include_once "../../utils/headers.php";
 
 
 switch ($_SERVER["REQUEST_METHOD"]) {
   case "GET":
-    $sql1 = $conn->prepare("SELECT * FROM tblProduct");
-    $sql1->execute();
+    $sql1 = "SELECT * FROM tblProduct";
 
     $result = $conn->execute_query($sql1);
+
     $products = $result->fetch_all(MYSQLI_ASSOC);
 
     $response = new ServerResponse(data: ["message" => "Products data fetched successfully", "products" => $products], error: []);

@@ -6,11 +6,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     $jsonData = getBodyParameters();
     $token = getAuthPayload();
 
-    $sql1 = $conn->prepare("SELECT * FROM tblAccount WHERE accountId = ?");
-    $sql1->bind_param("i", $userId);
-    $sql1->execute();
-
-    $result = $sql1->get_result();
+    $sql1 = "SELECT * FROM tblAccount WHERE accountId = ?";
+    $result = $conn->execute_query($sql1, [$token['accountId']]);
 
     if ($result->num_rows == 0) {
       $response = new ServerResponse(error: ["message" => "User does not exist"]);

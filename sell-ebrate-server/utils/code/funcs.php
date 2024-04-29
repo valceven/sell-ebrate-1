@@ -63,6 +63,7 @@ function createToken($user)
 {
   global $secretKey;
 
+  // FIX: impromptu jwt token
   $header = cleanData([
     "alg" => "HS256",
     "typ" => "JWT"
@@ -72,7 +73,6 @@ function createToken($user)
 
   return 'Bearer ' . $header . '.' . $payload . '.' . $signature;
 }
-
 
 
 /**
