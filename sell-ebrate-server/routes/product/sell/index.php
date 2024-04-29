@@ -22,7 +22,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
       $response = new ServerResponse(error: ["message" => "Failed to add product"]);
       returnJsonHttpResponse(500, $response);
     }
-    break;
+
 
   default:
     $response = new ServerResponse(error: ["message" => "Invalid request method"]);
