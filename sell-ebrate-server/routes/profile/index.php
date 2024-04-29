@@ -19,12 +19,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
     returnJsonHttpResponse(200, $response);
 
-
   case "UPDATE":
-
-
-    // TODO: something similar
-
+    // TODO: Update user data
     $jsonData = getBodyParameters();
     $token = getAuthPayload();
 
@@ -40,4 +36,34 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     $response = new ServerResponse(data: ["message" => "User data fetched successfully", "user" => $user]);
 
     returnJsonHttpResponse(200, $response);
+
+  case "DELETE":
+    $token = getAuthPayload();
+    $userId = $token["accountId"];
+
+    $sqlDeleteBuyer = $conn->prepare("DELETE FROM tblBuyer WHERE buyerId = ?");
+    $sqlDeleteBuyer->bind_param("i", $userId);
+    $sqlDeleteBuyer->execute();
+
+    $sqlDeleteSeller = $conn->prepare("DELETE FROM tblSeller WHERE sellerId = ?");
+    $sqlDeleteSeller->bind_param("i", $userId);
+    $sqlDeleteSeller->execute();
+
+    $sqlDeleteAccount = $conn->prepare("DELETE FROM tblAccount WHERE accountId = ?");
+    $sqlDeleteAccount->bind_param("i", $userId);
+    $sqlDeleteAccount->execute();
+
+    if ($sqlDeleteAccount->affected_rows > 0) {
+      $response = new ServerResponse(data: ["message" => "Account deleted successfully"]);
+      returnJsonHttpResponse(200, $response);
+    } else {
+      $response = new ServerResponse(error: ["message" => "Failed to delete account"]);
+      returnJsonHttpResponse(500, $response);
+    }
+    break;
+
+  default:
+    $response = new ServerResponse(error: ["message" => "Invalid request method"]);
+    returnJsonHttpResponse(405, $response);
+    break;
 }
